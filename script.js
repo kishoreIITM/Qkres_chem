@@ -69,10 +69,10 @@ data = {
 let items = data.products.map((product) => {
     
 return(
-`<div  class="col-12 col-sm-4 wow fadeInUp slow">
+`<div  class="col-12 col-sm-4">
 <div class="card">
     <div class="card-img">
-        <img src=${product.image}></img>
+        <img class=${product.bigimg} data-src=${product.image}></img>
     </div>
     <div class="class-body text-center">
         <h4 class="card-title">
@@ -95,8 +95,9 @@ let final = items.map((item)=>{
     s = s + item;
 })
 document.getElementById('main').innerHTML= s ;
-setTimeout(function(){
-    loadedcount = 0;
+
+/*setTimeout(function(){
+loadedcount = 0;
 var count = data.products.length;
 for(var i=0;i <count;i++){
     var img = new Image();
@@ -109,7 +110,7 @@ for(var i=0;i <count;i++){
                 `<div  class="col-12 col-sm-4 wow fadeInUp slow">
                 <div class="card">
                     <div class="card-img">
-                    <img src=${product.bigimg}></img>
+                    <img src=${product.bigimg} ></img>
                     </div>
                     <div class="class-body text-center">
                         <h4 class="card-title">
@@ -136,7 +137,35 @@ for(var i=0;i <count;i++){
     };
     img.src = data.products[i].bigimg;
 }
-},3000)
+},3000)*/
+
+var images = document.querySelectorAll("[data-src]");
+    console.log("selected");
+    options = {
+        rootMargin : "0px 0px -300px 0px",
+    }
+    var imgObserver = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+            if (entry.isIntersecting){
+                entry.target.src = entry.target.getAttribute("data-src");
+                setTimeout(()=>{
+                    var y = new Image();
+                y.onload= ()=>{
+                    entry.target.src = y.src;
+                }
+                y.src = entry.target.className;
+                },100)
+                
+                
+                imgObserver.unobserve(entry.target);
+            }
+        });
+    } ,options);
+images.forEach(img=>{
+    imgObserver.observe(img)
+})
+    
+
 
 
 
